@@ -63,8 +63,11 @@ auto qos = rclcpp::SensorDataQoS();
 // Commands and joint targets — reliable delivery required
 auto qos = rclcpp::SystemDefaultsQoS();
 
-// TF — late-joiners must get current transforms
+// /tf_static — late-joiners must receive static transforms
 auto qos = rclcpp::QoS(100).transient_local();
+
+// /tf — dynamic transforms; keep VOLATILE to avoid latching stale data
+auto qos = rclcpp::SystemDefaultsQoS();
 
 // Status/diagnostics — best effort, high frequency
 auto qos = rclcpp::QoS(10).best_effort().durability_volatile();

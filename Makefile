@@ -45,7 +45,7 @@ clean:
 	rm -rf $(WS_ROOT)/build $(WS_ROOT)/install $(WS_ROOT)/log
 
 setup:
-	pip install --user pre-commit
+	python3 -m pip install --user pre-commit
 	pre-commit install
 	source $(ROS_SETUP) && cd $(WS_ROOT) && \
 	rosdep install --from-paths src --ignore-src -r -y

@@ -79,7 +79,8 @@ CI runs lint as a separate job before build/test.
 **QoS by data type:**
 - Sensor topics (LiDAR, IMU, cameras): `rclcpp::SensorDataQoS()`
 - Commands and joint targets: `rclcpp::SystemDefaultsQoS()`
-- TF: `rclcpp::QoS(100).transient_local()`
+- `/tf`: `rclcpp::SystemDefaultsQoS()` (VOLATILE — dynamic transforms)
+- `/tf_static`: `rclcpp::QoS(100).transient_local()`
 
 **Package structure per package:**
 ```

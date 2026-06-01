@@ -22,7 +22,8 @@ class MyNode : public rclcpp_lifecycle::LifecycleNode {
 **QoS cheatsheet — use the right profile:**
 - `/scan`, `/pointcloud`, `/imu`, `/camera/*`: `rclcpp::SensorDataQoS()`
 - `/cmd_vel`, `/joint_commands`: `rclcpp::SystemDefaultsQoS()`
-- `/tf`, `/tf_static`: `rclcpp::QoS(100).transient_local()`
+- `/tf_static`: `rclcpp::QoS(100).transient_local()`
+- `/tf`: `rclcpp::SystemDefaultsQoS()` (keep VOLATILE — dynamic transforms)
 - Action feedback: RELIABLE + VOLATILE
 
 **For Python lifecycle nodes:**
