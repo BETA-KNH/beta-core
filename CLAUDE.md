@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-ROS2 Jazzy humanoid robot stack. Workspace root: `ros2_ws/`, this repo at `ros2_ws/src/beta-core/`.
+ROS2 Jazzy humanoid robot stack. Workspace root: `/ros2_ws`, this repo at `/ros2_ws/src/beta-core`.
 
 ## Commands
 
@@ -29,6 +29,8 @@ make setup                  # first-time: pre-commit install + rosdep
 
 Coding patterns (load when writing nodes, tests, or perception/navigation code):
 `.claude/skills/ros2-core.md`, `ros2-testing.md`, `ros2-perception.md`, `ros2-navigation.md`
+
+When a request arrives that may fall outside this session's feature scope, apply `.claude/skills/session-hygiene.md`.
 
 Slash commands: `/scaffold-package <name>`, `/create-node <spec>`, `/create-launch <spec>`, `/create-interface <spec>`
 

@@ -27,6 +27,8 @@ protected:
 TEST_F(TestMyNode, ParameterDefaults) {
   rclcpp::NodeOptions opts;
   auto node = std::make_shared<my_package::MyNode>(opts);
+  // Parameters are declared in on_configure() — trigger the transition first
+  node->configure();
   EXPECT_DOUBLE_EQ(node->get_parameter("rate_hz").as_double(), 10.0);
 }
 ```
