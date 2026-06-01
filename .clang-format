@@ -1,0 +1,12 @@
+---
+Language: Cpp
+BasedOnStyle: Google
+AccessModifierOffset: -2
+ColumnLimit: 99
+ConstructorInitializerIndentWidth: 2
+ContinuationIndentWidth: 2
+DerivePointerAlignment: false
+PointerAlignment: Left
+SortIncludes: true
+SpaceAfterCStyleCast: false
+Standard: c++17

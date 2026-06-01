@@ -4,76 +4,131 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-`beta-core` is a ROS (Robot Operating System) repository using the **Catkin** build system. The `.gitignore` reveals the expected workspace layout: generated `devel/`, `build/`, and `lib/` directories are excluded, along with ROS message/service auto-generated files, dynamic reconfigure outputs, and a `planning` package.
+`beta-core` is a **ROS2 Jazzy** repository for a humanoid robot system. It uses **colcon** as the build tool and lives inside a ROS2 workspace `src/` directory.
+
+Authoritative architecture decisions are in `docs/decisions/`. Read those before proposing alternatives to the choices recorded there.
 
 ## Workspace Layout
 
-This repo is intended to live inside a Catkin workspace `src/` directory:
-
 ```
-catkin_ws/
+ros2_ws/
   src/
-    beta-core/       ← this repo
-      planning/      ← hinted by .gitignore
-      <other pkgs>/
-  build/             ← generated, gitignored
-  devel/             ← generated, gitignored
+    beta-core/        ← this repo
+      <package_a>/
+      <package_b>/
+  build/              ← generated, gitignored
+  install/            ← generated, gitignored
+  log/                ← generated, gitignored
 ```
 
 ## Build
 
+All commands run from the **workspace root** (`ros2_ws/`), or via `make` from inside this repo:
+
 ```bash
-# From workspace root (catkin_ws/)
-catkin_make
+# From workspace root
+source /opt/ros/jazzy/setup.bash
+colcon build --symlink-install
 
-# Or with catkin_tools (preferred for multi-package workspaces)
-catkin build
+# Source after building (required before running nodes)
+source install/setup.bash
 
-# Source the workspace after building
-source devel/setup.bash
+# Via Makefile (from inside beta-core/)
+make build       # RelWithDebInfo
+make build-release
+make clean
 ```
 
 ## Testing
 
 ```bash
-# Run all tests (catkin_make)
-catkin_make run_tests
+# All packages
+colcon test --return-code-on-test-failure
+colcon test-result --verbose          # human-readable summary
 
-# Run tests for a single package
-catkin_make run_tests_<package_name>
+# Single package
+colcon test --packages-select <pkg> --return-code-on-test-failure
 
-# With catkin_tools
-catkin run_tests
-catkin run_tests --no-deps <package_name>
-
-# Run a specific rostest file
-rostest <package_name> <test_file.test>
-
-# Run a specific gtest/rosunit
-rosrun <package_name> <test_binary>
+# Via Makefile
+make test
+make test-pkg PKG=<package_name>
 ```
 
-## Key ROS Conventions
+## Installing Dependencies
 
-- **Packages** each have a `CMakeLists.txt` and `package.xml`. These define dependencies, message/service/action generation, and build targets.
-- **Messages/Services/Actions**: Auto-generated Python and C++ bindings land in `devel/` — never edit those files directly.
-- **Dynamic reconfigure**: Config files in `cfg/` generate `cfg/cpp/` and `cfg/*.py` (both gitignored). Run `catkin_make` to regenerate after editing `.cfg` files.
-- **Launching nodes**: `roslaunch <package_name> <launch_file.launch>`
-- **Environment**: Always `source devel/setup.bash` (or `setup.zsh`) before running any ROS commands in a new shell.
+```bash
+rosdep install --from-paths src --ignore-src -r -y
+# Or:
+make setup   # also installs pre-commit hooks
+```
 
-## Catkin Package Structure (per package)
+## Linting
 
+```bash
+pre-commit run --all-files   # all files
+pre-commit run               # staged files only
+make lint
+```
+
+CI runs lint as a separate job before build/test.
+
+## Key Conventions
+
+**Every node must be a lifecycle node** (`rclcpp_lifecycle::LifecycleNode`). Standard `rclcpp::Node` is not used — `ros2_control` controllers require lifecycle compliance.
+
+**QoS by data type:**
+- Sensor topics (LiDAR, IMU, cameras): `rclcpp::SensorDataQoS()`
+- Commands and joint targets: `rclcpp::SystemDefaultsQoS()`
+- TF: `rclcpp::QoS(100).transient_local()`
+
+**Package structure per package:**
 ```
 <package>/
-  CMakeLists.txt    ← build rules, message generation, install targets
-  package.xml       ← dependencies, version, maintainer
-  include/          ← C++ headers
-  src/              ← C++ source or Python nodes
-  scripts/          ← executable Python nodes/scripts
-  launch/           ← .launch files
-  msg/              ← custom message definitions (.msg)
-  srv/              ← custom service definitions (.srv)
-  action/           ← custom action definitions (.action)
-  cfg/              ← dynamic reconfigure config files (.cfg)
-  test/             ← test files (.test, _test.py, _test.cpp)
+  CMakeLists.txt    ← ament_cmake, targets, lint tests
+  package.xml       ← format="3", Apache-2.0
+  include/<pkg>/    ← C++ headers
+  src/              ← node source + main.cpp
+  launch/           ← .launch.py files
+  config/           ← params.yaml files
+  msg/ srv/ action/ ← interface definitions
+  test/             ← gtest + launch_testing
 ```
+
+**Middleware:** CycloneDDS (`RMW_IMPLEMENTATION=rmw_cyclonedds_cpp`)
+
+## Agent Skills
+
+Detailed ROS2 coding patterns are in `.claude/skills/`. Reference them when generating nodes, tests, or interfaces:
+
+- @.claude/skills/ros2-core.md — lifecycle nodes, QoS, composable nodes, parameters
+- @.claude/skills/ros2-testing.md — gtest, launch_testing, colcon test commands
+- @.claude/skills/ros2-perception.md — PointCloud2, images, TF2, message_filters
+- @.claude/skills/ros2-navigation.md — Nav2 goals, BehaviorTree.CPP v4, action servers
+
+## Slash Commands
+
+- `/scaffold-package <name>` — generates a complete colcon-buildable ROS2 C++ package
+- `/create-node <spec>` — generates a lifecycle node from a natural language spec
+- `/create-launch <spec>` — generates a launch.py file
+- `/create-interface <spec>` — generates .msg/.srv/.action files with CMakeLists updates
+
+## MCP Servers (configured in .claude/settings.json)
+
+- **memory** — in-session knowledge graph; resets on restart, so record important decisions as ADRs
+- **ros2-dev** — introspect a running ROS2 system (topics, services, actions, parameters); requires rosbridge:
+  ```bash
+  ros2 launch rosbridge_server rosbridge_websocket.launch.xml
+  ```
+
+## CI
+
+GitHub Actions (`.github/workflows/ci.yml`) runs on every push to `main`, `claude/**`, `feature/**`, `fix/**`:
+1. **Lint** — pre-commit (black, isort, clang-format, hadolint)
+2. **Build & Test** — `ros-tooling/action-ros-ci` with ROS2 Jazzy
+
+## Architecture Decisions
+
+See `docs/decisions/` for rationale behind key choices:
+- `001-ros2-jazzy.md` — why Jazzy, why CycloneDDS
+- `002-behaviour-execution.md` — BehaviorTree.CPP v4, ros2_control, Nav2, RAI stack
+- `003-development-tooling.md` — agent tooling choices and setup instructions
