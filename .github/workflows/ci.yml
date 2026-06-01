@@ -37,16 +37,22 @@ jobs:
         with:
           required-ros-distributions: ${{ matrix.ros_distribution }}
 
+      - name: Check for ROS2 packages
+        id: packages
+        run: |
+          if find . -name 'package.xml' -not -path '*/\.*' | grep -q .; then
+            echo "found=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "found=false" >> "$GITHUB_OUTPUT"
+            echo "No package.xml files found — skipping build and test."
+          fi
+
       - name: Build and test
+        if: steps.packages.outputs.found == 'true'
         uses: ros-tooling/action-ros-ci@v0.4
         with:
           target-ros2-distro: ${{ matrix.ros_distribution }}
-          colcon-defaults: |
-            {
-              "build": {
-                "cmake-args": ["-DCMAKE_BUILD_TYPE=RelWithDebInfo"]
-              }
-            }
+          extra-cmake-args: -DCMAKE_BUILD_TYPE=RelWithDebInfo
 
       - name: Upload test results
         uses: actions/upload-artifact@v4

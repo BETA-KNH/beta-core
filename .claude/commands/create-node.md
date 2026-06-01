@@ -27,7 +27,7 @@ class MyNode : public rclcpp_lifecycle::LifecycleNode {
 
 **For Python lifecycle nodes:**
 ```python
-from rclcpp_lifecycle import LifecycleNode, LifecycleState, TransitionCallbackReturn
+from rclpy.lifecycle import LifecycleNode, TransitionCallbackReturn, State
 ```
 
 After creating the node, add it to the package's CMakeLists.txt (C++) or setup.py (Python) and verify with `make build`.

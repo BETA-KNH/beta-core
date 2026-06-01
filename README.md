@@ -51,5 +51,5 @@ beta-core/
 
 ## For AI Agents
 
-See [CLAUDE.md](CLAUDE.md) for build commands, coding conventions, and architecture overview.  
+See [CLAUDE.md](CLAUDE.md) for build commands, coding conventions, and architecture overview.
 See [docs/decisions/](docs/decisions/) for rationale behind key design choices.

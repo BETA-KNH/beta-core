@@ -9,13 +9,14 @@ ROS_SETUP := /opt/ros/$(ROS_DISTRO)/setup.bash
 WS_ROOT ?= $(or $(ROS2_WS),$(realpath $(CURDIR)/../..))
 _ := $(if $(wildcard $(WS_ROOT)/src),,$(warning WS_ROOT=$(WS_ROOT) has no src/ — set WS_ROOT manually))
 
-.PHONY: all build build-release test test-verbose lint clean setup doctor sim
+.PHONY: all build build-release test test-pkg lint lint-staged clean setup doctor sim
 
 all: build
 
 build:
 	source $(ROS_SETUP) && cd $(WS_ROOT) && \
 	colcon build --symlink-install \
+		$(if $(PKG),--packages-select $(PKG),) \
 		--cmake-args -DCMAKE_BUILD_TYPE=RelWithDebInfo \
 		--event-handlers console_cohesion+
 
@@ -44,7 +45,7 @@ clean:
 	rm -rf $(WS_ROOT)/build $(WS_ROOT)/install $(WS_ROOT)/log
 
 setup:
-	pip install pre-commit
+	pip install --user pre-commit
 	pre-commit install
 	source $(ROS_SETUP) && cd $(WS_ROOT) && \
 	rosdep install --from-paths src --ignore-src -r -y
