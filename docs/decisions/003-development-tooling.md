@@ -1,6 +1,6 @@
 # ADR 003 — AI-Assisted Development Tooling
 
-**Status:** Accepted  
+**Status:** Accepted
 **Date:** 2026-06-01
 
 ## Decision

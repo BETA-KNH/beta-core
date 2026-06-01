@@ -1,6 +1,6 @@
 # ADR 001 — Use ROS2 Jazzy Jalisco
 
-**Status:** Accepted  
+**Status:** Accepted
 **Date:** 2026-06-01
 
 ## Decision

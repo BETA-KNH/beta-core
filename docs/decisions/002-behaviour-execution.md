@@ -1,6 +1,6 @@
 # ADR 002 — Behaviour Execution Stack
 
-**Status:** Accepted  
+**Status:** Accepted
 **Date:** 2026-06-01
 
 ## Decision

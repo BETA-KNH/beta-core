@@ -10,7 +10,7 @@ from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
     pkg = FindPackageShare('package_name')
-    
+
     return LaunchDescription([
         DeclareLaunchArgument('use_sim_time', default_value='false'),
         Node(
