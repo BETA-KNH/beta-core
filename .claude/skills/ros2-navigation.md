@@ -74,7 +74,11 @@ action_server_ = rclcpp_action::create_server<MyTask>(
   },
   [](std::shared_ptr<GoalHandle>) { return rclcpp_action::CancelResponse::ACCEPT; },
   [this](std::shared_ptr<GoalHandle> handle) {
-    std::thread([this, handle]() { execute(handle); }).detach();
+    // Capture shared_ptr, not raw this — node must outlive the execution thread
+    auto self = shared_from_this();
+    std::thread([self, handle]() {
+      std::static_pointer_cast<MyNode>(self)->execute(handle);
+    }).detach();
   });
 
 void execute(std::shared_ptr<GoalHandle> handle) {

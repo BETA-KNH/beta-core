@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-ROS2 Jazzy humanoid robot stack. Workspace root: `ros2_ws/`, this repo at `ros2_ws/src/beta-core/`.
+ROS2 Jazzy humanoid robot stack. Workspace root: `/ros2_ws`, this repo at `/ros2_ws/src/beta-core`.
 
 ## Commands
 
