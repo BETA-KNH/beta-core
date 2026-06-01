@@ -2,9 +2,12 @@ SHELL := /bin/bash
 ROS_DISTRO ?= jazzy
 ROS_SETUP := /opt/ros/$(ROS_DISTRO)/setup.bash
 
-# Workspace root is two levels up when this repo lives at <ws>/src/beta-core/
-# Override with: make build WS_ROOT=/path/to/ros2_ws
-WS_ROOT ?= $(realpath $(CURDIR)/../..)
+# Workspace root resolution order:
+#   1. ROS2_WS env var (set automatically inside the Dev Container)
+#   2. Two levels up — works when repo is at <ws>/src/beta-core/
+#   3. Override: make build WS_ROOT=/path/to/ros2_ws
+WS_ROOT ?= $(or $(ROS2_WS),$(realpath $(CURDIR)/../..))
+_ := $(if $(wildcard $(WS_ROOT)/src),,$(warning WS_ROOT=$(WS_ROOT) has no src/ — set WS_ROOT manually))
 
 .PHONY: all build build-release test test-verbose lint clean setup doctor sim
 
