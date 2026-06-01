@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "memory": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-memory"]
+    },
+    "ros2-dev": {
+      "command": "npx",
+      "args": ["-y", "@robotmcp/ros-mcp-server"],
+      "env": {
+        "ROSBRIDGE_URI": "ws://localhost:9090"
+      }
+    }
+  }
+}
