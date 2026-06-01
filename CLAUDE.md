@@ -30,7 +30,7 @@ make setup                  # first-time: pre-commit install + rosdep
 Coding patterns (load when writing nodes, tests, or perception/navigation code):
 `.claude/skills/ros2-core.md`, `ros2-testing.md`, `ros2-perception.md`, `ros2-navigation.md`
 
-After completing any self-contained task, apply `.claude/skills/session-hygiene.md` to decide if you should recommend a new session.
+When a request arrives that may fall outside this session's feature scope, apply `.claude/skills/session-hygiene.md`.
 
 Slash commands: `/scaffold-package <name>`, `/create-node <spec>`, `/create-launch <spec>`, `/create-interface <spec>`
 

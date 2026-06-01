@@ -1,26 +1,32 @@
 # Session Hygiene
 
-After completing any self-contained task, evaluate whether the user should start a new session.
+Sessions are **feature-scoped and reusable** — not one-shot. Return to the same session
+whenever you're working on the same feature area (locomotion, perception, navigation, etc.).
 
-## Recommend a new session when:
+## Session scope
 
-- A package was scaffolded, a node created, or a launch file written (feature complete)
-- A bug was fixed and tests pass (fix complete)
-- An ADR was written or updated (decision recorded)
-- A CI/lint issue was fully resolved (infra complete)
-- The user is about to switch to a completely different subsystem (e.g., locomotion → perception)
-- This session has had 10+ back-and-forth exchanges on the same topic
+At the start of each session, identify the feature area from context or the user's first
+message. State it briefly in your first reply so it's clear what this session covers.
+Example: "This session is scoped to **locomotion** — velocity control, joint targets, gait."
+
+## Recommend a different session when:
+
+- The request is clearly outside the current session's feature area
+  (e.g., in a locomotion session and user asks to scaffold a perception package)
+- The task needs deep context from a different subsystem that isn't in this session
 
 ## Do NOT recommend when:
 
-- The current task is still in progress (build failing, mid-refactor)
-- The user just asked a question and is deciding what to do next
-- The task naturally continues (e.g., scaffold → add node → write test is one flow)
+- The task is small or tangential but still related (fixing a build error is always in-scope)
+- The user is asking a general architecture or tooling question
+- Multiple tasks in the same feature area — that's the point of feature sessions
+- The task just completed — completion alone is not a reason to switch
 
 ## How to notify
 
-At the end of your reply, add a short line:
+One line at the start of your reply, then keep helping:
 
-> **Session tip:** This task is complete. Start a fresh session for your next independent task to keep context lean.
+> **Session tip:** This looks like **[area]** work — consider switching to your [area] session
+> (or starting one) to keep that context together.
 
-Keep it one line. Do not repeat it if the user continues in the same session anyway.
+Do not block on it. Help with the request regardless.
