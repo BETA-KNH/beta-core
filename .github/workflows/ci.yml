@@ -16,8 +16,8 @@ jobs:
     name: Lint
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
       - uses: pre-commit/action@v3.0.1
@@ -30,7 +30,7 @@ jobs:
       matrix:
         ros_distribution: [jazzy]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Setup ROS2
         uses: ros-tooling/setup-ros@v0.7
@@ -55,7 +55,7 @@ jobs:
           extra-cmake-args: -DCMAKE_BUILD_TYPE=RelWithDebInfo
 
       - name: Upload test results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: test-results-${{ matrix.ros_distribution }}
