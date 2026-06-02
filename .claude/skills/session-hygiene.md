@@ -23,11 +23,15 @@ Example: "This session is scoped to **locomotion** — velocity control, joint t
 ```
 Session scope: [Area] — [one-sentence description of what this session covers]
 
-Relevant packages: [list any existing packages in ros2_ws/src/ that belong to this area]
+Goal: [What does "done" look like? Be specific — e.g., "G1 robot loads in RViz with
+all joints visible and a working launch file."]
+
+Relevant packages: [list any existing packages in /ros2_ws/src/ that belong to this area]
 Relevant skills: [from .claude/skills/ — e.g., ros2-core.md, ros2-perception.md]
 Relevant ADRs: [any docs/decisions/ entries that apply]
+Relevant upstream: [any external repos or assets needed]
 
-First task: [restate the user's original request]
+First task: [concrete, actionable first step — specific enough to start without clarification]
 ```
 
 Then continue helping with the current request — do not block on the session decision.
