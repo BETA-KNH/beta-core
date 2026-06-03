@@ -37,6 +37,10 @@ jobs:
         with:
           required-ros-distributions: ${{ matrix.ros_distribution }}
 
+      - name: Expose ROS Python packages to test runner
+        run: |
+          echo "PYTHONPATH=/opt/ros/${{ matrix.ros_distribution }}/lib/python3.12/site-packages:${PYTHONPATH}" >> "$GITHUB_ENV"
+
       - name: Check for ROS2 packages
         id: packages
         run: |
