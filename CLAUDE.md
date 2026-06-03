@@ -15,6 +15,8 @@ make setup                  # first-time: pre-commit install + rosdep
 
 ## Hard Rules
 
+- **Never commit to `main` directly** — Claude Code auto-creates the session branch; commit there and open a PR to merge.
+- **Install missing tools, don't work around them** — if a CLI tool is missing, install it (`apt-get`, `pip`, `cargo`, etc.) rather than reimplementing its logic in Python or shell.
 - **Every node is a lifecycle node** (`rclcpp_lifecycle::LifecycleNode`) — `ros2_control` requires it.
 - **package.xml**: `format="3"`, license `Apache-2.0`
 - **Middleware**: CycloneDDS (`RMW_IMPLEMENTATION=rmw_cyclonedds_cpp`)
