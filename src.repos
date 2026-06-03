@@ -1,0 +1,5 @@
+repositories:
+  unitree_ros:
+    type: git
+    url: https://github.com/unitreerobotics/unitree_ros.git
+    version: ae2b2a7
